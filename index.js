@@ -45,7 +45,8 @@ async function run() {
     app.delete("/myPlaces/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      console.log("deleted", id, query);
+      const result = await placesCollection.deleteOne(query);
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection

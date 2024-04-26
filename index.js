@@ -62,7 +62,26 @@ async function run() {
       const filter = { _id: new ObjectId(id) };
       const options = { upsert: true };
       const place = req.body;
-      console.log(id, place, filter);
+      console.log(place);
+      const updatedPlace = {
+        $set: {
+          tourist_spot_name: place.tourist_spot_name,
+          country_Name: place.country_Name,
+          image: place.image,
+          location: place.location,
+          short_description: place.short_description,
+          average_cost: place.average_cost,
+          seasonality: place.seasonality,
+          travel_time: place.travel_time,
+          totalVisitorsPerYear: place.totalVisitorsPerYear,
+        },
+      };
+      const result = await placesCollection.updateOne(
+        filter,
+        updatedPlace,
+        options
+      );
+      res.send(result);
     });
 
     // Send a ping to confirm a successful connection

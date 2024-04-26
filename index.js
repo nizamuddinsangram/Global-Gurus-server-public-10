@@ -35,11 +35,19 @@ async function run() {
       const result = await placesCollection.find().toArray();
       res.send(result);
     });
-    app.get("/myPlaces/:email", async (req, res) => {
+    //single data loaded api
+    app.get("/myList/:email", async (req, res) => {
       const filter = req.params.email;
+      //   console.log("my email", filter);
       const result = await placesCollection
         .find({ user_email: req?.params?.email })
         .toArray();
+      res.send(result);
+    });
+    app.get("/singleList/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await placesCollection.findOne(query);
       res.send(result);
     });
     app.delete("/myPlaces/:id", async (req, res) => {
@@ -48,14 +56,15 @@ async function run() {
       const result = await placesCollection.deleteOne(query);
       res.send(result);
     });
-    //single data loaded api
-    app.get("/myPlaces/:id", async (req, res) => {
+    // update related api
+    app.put("/myPlaces/:id", async (req, res) => {
       const id = req.params.id;
-      console.log(id);
-      const query = { _id: new ObjectId(id) };
-      const result = await placesCollection.findOne(query);
-      res.send(result);
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const place = req.body;
+      console.log(id, place, filter);
     });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(

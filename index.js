@@ -48,7 +48,11 @@ async function run() {
       const result = await placesCollection.deleteOne(query);
       res.send(result);
     });
-
+    //single data loaded api
+    app.get("/myPlaces/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(

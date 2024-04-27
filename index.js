@@ -25,7 +25,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const placesCollection = client.db("southeastDB").collection("places");
-
+    const countryCollection = client.db("southeastDB").collection("country");
     app.post("/myPlaces", async (req, res) => {
       const places = req.body;
       const result = await placesCollection.insertOne(places);
@@ -131,7 +131,11 @@ async function run() {
       );
       res.send(result);
     });
-
+    //country related api
+    app.get("/country", async (req, res) => {
+      const result = await countryCollection.find().toArray();
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(

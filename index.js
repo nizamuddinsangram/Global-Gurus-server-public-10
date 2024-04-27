@@ -50,13 +50,53 @@ async function run() {
       const result = await placesCollection.findOne(query);
       res.send(result);
     });
-    // details related api
-    app.get("/details/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await placesCollection.findOne(query);
+    // search related api
+    app.get("/search", async (req, res) => {
+      const result = await placesCollection
+        .aggregate([
+          {
+            $addFields: {
+              average_cost_numeric: { $toInt: "$average_cost" }, // Convert to integer
+            },
+          },
+          { $sort: { average_cost_numeric: -1 } }, // Sort by the numeric field
+        ])
+        .toArray();
       res.send(result);
     });
+    // app.get("/search", async (req, res) => {
+    //   const { sort } = req.query;
+    //   console.log(sort);
+    //   let sortOrder = 1;
+    //   if (sort === "desc") {
+    //     sortOrder = -1;
+    //   }
+    //   const result = await placesCollection
+    //     .aggregate([
+    //       {
+    //         $addFields: {
+    //           average_cost_numeric: { $toInt: "$average_cost" }, // Convert string to number
+    //         },
+    //       },
+    //       { $sort: { average_cost_numeric: sortOrder } }, // Sort by the numeric version of average_cost
+    //       { $limit: 6 }, // Limit to 6 results
+    //     ])
+    //     .toArray();
+    //   // const result = await placesCollection
+    //   //   .find()
+    //   //   .sort({ average_cost: sortOrder })
+    //   //   .limit(6)
+    //   //   .toArray();
+    //   res.send(result);
+    // });
+
+    // details related api
+    // app.get("/details/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: new ObjectId(id) };
+    //   const result = await placesCollection.findOne(query);
+    //   res.send(result);
+    // });
     //details related api end
     app.delete("/myPlaces/:id", async (req, res) => {
       const id = req.params.id;

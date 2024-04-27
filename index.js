@@ -136,6 +136,14 @@ async function run() {
       const result = await countryCollection.find().toArray();
       res.send(result);
     });
+    //
+    app.get("/allCountry/:countryName", async (req, res) => {
+      const { countryName } = req.params;
+      const result = await placesCollection
+        .find({ country_Name: country_Name })
+        .toArray();
+      res.send(result);
+    });
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(

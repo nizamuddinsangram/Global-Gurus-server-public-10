@@ -50,6 +50,14 @@ async function run() {
       const result = await placesCollection.findOne(query);
       res.send(result);
     });
+    // details related api
+    app.get("/details/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await placesCollection.findOne(query);
+      res.send(result);
+    });
+    //details related api end
     app.delete("/myPlaces/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };

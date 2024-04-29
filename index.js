@@ -5,7 +5,11 @@ const port = process.env.PORT || 7000;
 require("dotenv").config();
 
 //middleware
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://assignment10-6b79b.web.app",
+];
+app.use(cors(allowedOrigins));
 app.use(express.json());
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
@@ -140,7 +144,7 @@ async function run() {
     app.get("/allCountry/:countryName", async (req, res) => {
       const { countryName } = req.params;
       const result = await placesCollection
-        .find({ country_Name: country_Name })
+        .find({ country_Name: countryName })
         .toArray();
       res.send(result);
     });
